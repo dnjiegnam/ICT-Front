@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <title>Admin Web Portal</title>
+    <style>
+      /* Webpixels CSS */
+      /* Utility and component-centric Design System based on Bootstrap for fast, responsive UI development */
+      /* URL: https://github.com/webpixels/css */
+
+      @import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
+
+      /* Bootstrap Icons */
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
+    </style>
+  </head>
+  <body>
+    <!-- Dashboard -->
+    <div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+      <!-- Vertical Navbar -->
+      <nav
+        class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg"
+        id="navbarVertical"
+      >
+        <div class="container-fluid">
+          <!-- Toggler -->
+          <button
+            class="navbar-toggler ms-n2"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebarCollapse"
+            aria-controls="sidebarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Brand -->
+          <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="#">
+            <h4><i class="fa fa-globe"></i> Web Portal  ICT</h4>
+          </a>
+          <!-- User menu (mobile) -->
+          <div class="navbar-user d-lg-none">
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <!-- Menu -->
+              <div
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="sidebarAvatar"
+              >
+                <a href="#" class="dropdown-item">Profile</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <a href="#" class="dropdown-item">Billing</a>
+                <hr class="dropdown-divider" />
+                <a href="#" class="dropdown-item">Logout</a>
+              </div>
+            </div>
+          </div>
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse" id="sidebarCollapse">
+            <!-- Navigation -->
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" data-id="dashboard" href="#">
+                  <i class="bi bi-house"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-id="users" href="#">
+                  <i class="bi bi-people"></i> Users
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-id="roles" href="#">
+                  <i class="bi bi-bar-chart"></i> Roles
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-id="semesters" href="#">
+                  <i class="bi bi-bookmarks"></i> Semesters
+                </a>
+              </li>
+            </ul>
+            <!-- User (md) -->
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" data-id="account" href="#">
+                  <i class="bi bi-person-square"></i> Account
+                </a>
+              </li>
+              <li class="nav-item">
+                <form
+                  class="row g-3"
+                  id="logout"
+                  data-action="api/logout"
+                  method="POST"
+                >
+                  <button type="button" onclick="submitForm('logout', 'btn_logout')"
+                  id="btn_logout" class="nav-link bg-transparent">
+                    <i class="bi bi-box-arrow-left"></i> Logout
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- Main content -->
+      <div class="h-screen flex-grow-1 overflow-y-lg-auto">
+        <!-- Header -->
+        <header class="bg-surface-primary border-bottom pt-6">
+          <div class="container-fluid">
+            <div class="mb-npx pb-5">
+              <div class="row align-items-center">
+                <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+                  <!-- Title -->
+                  <h1 class="h4 mb-0 ls-tight">Admin</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <!-- Main -->
+        <main class="py-6 bg-surface-secondary">
+          <div class="container-fluid" id="main">
+            <!-- Card stats -->
+            <div class="row g-6 mb-6">
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card shadow border-0">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <span
+                          class="h6 font-semibold text-muted text-sm d-block mb-2"
+                          > <strong>All users</strong> </span
+                        >
+                        <span class="h3 font-bold mb-0" id="all_user"></span>
+                      </div>
+                      <div class="col-auto">
+                        <div
+                          class="icon icon-shape bg-tertiary text-white text-lg rounded-circle"
+                        >
+                          <i class="bi bi-credit-card"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card shadow border-0 mb-7">
+                <div class="card-header">
+                  <h5 class="mb-0">Applications</h5>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Last Updated</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="user_list">
+                    </tbody>
+                  </table>
+                </div>
+                <div class="card-footer border-0 py-5">
+                  <span class="text-muted text-sm"
+                    >Showing 10 items out of 250 results found</span
+                  >
+                </div>
+              </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
+
+<template id="dashboard">
+  <!-- Card stats -->
+  <div class="row g-6 mb-6">
+    <div class="col-xl-3 col-sm-6 col-12">
+      <div class="card shadow border-0">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <span
+                class="h6 font-semibold text-muted text-sm d-block mb-2"
+                > <strong>All users</strong> </span
+              >
+              <span class="h3 font-bold mb-0" id="all_user"></span>
+            </div>
+            <div class="col-auto">
+              <div
+                class="icon icon-shape bg-tertiary text-white text-lg rounded-circle"
+              >
+                <i class="bi bi-credit-card"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow border-0 mb-7">
+    <div class="card-header">
+      <h5 class="mb-0">Users</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="user_list">
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer border-0 py-5">
+      <span class="text-muted text-sm"
+        >Showing 10 items out of 250 results found</span
+      >
+    </div>
+  </div>
+</template>
+
+<template id="users">
+  <form
+    class="row g-3"
+    id="addNewUser"
+    data-action="api/admin/user"
+    method="POST"
+  >
+    <div class="col-auto">
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        id="name"
+        placeholder="Name"
+      />
+    </div>
+    <div class="col-auto">
+      <input
+        type="email"
+        name="email"
+        class="form-control"
+        id="email"
+        placeholder="Email"
+      />
+    </div>
+    <div class="col-auto">
+      <input
+        type="text"
+        name="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+      />
+    </div>
+    <div class="col-auto">
+      <select class="form-control" name="role_id" id="admin_role_id_select">
+        <option value="">Select Role</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <input
+        type="Text"
+        name="matricule"
+        class="form-control d-none"
+        id="matricule"
+        placeholder="Matricule"
+      />
+    </div>
+    <input type="hidden" value="" name="id" id="id">
+    <div class="col-auto">
+      <button
+        type="button"
+        onclick="submitForm('addNewUser', 'btn_addNewUser')"
+        id="btn_addNewUser"
+        class="btn btn-primary mb-3"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+  <hr />
+  <div class="card shadow border-0 mb-7">
+    <div class="card-header">
+      <h5 class="mb-0">users</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="user_list"></tbody>
+      </table>
+    </div>
+    <!-- <div class="card-footer border-0 py-5">
+      !-- <span class="text-muted text-sm"
+        >Showing 10 items out of 250 results found</span
+      > --
+    </div> -->
+  </div>
+</template>
+
+<template id="roles">
+  <form class="row g-3" id="addNewRole"
+  data-action="api/admin/role"
+  method="POST">
+    <div class="col-auto">
+      <label for="inputrole2" class="visually-hidden">Add new role</label>
+      <input
+        type="role"
+        class="form-control"
+        id="inputrole2"
+        placeholder="Add new role"
+        name="name"
+      />
+    </div>
+    <div class="col-auto">
+        <button
+        type="button"
+        onclick="submitForm('addNewRole', 'btn_addNewRole')"
+        id="btn_addNewRole"
+        class="btn btn-primary mb-3"
+      >
+        Save
+      </button>
+      <input type="hidden" value="" name="id" id="id">
+    </div>
+  </form>
+  <hr />
+  <div class="card shadow border-0 mb-7">
+    <div class="card-header">
+      <h5 class="mb-0">roles</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Updated date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="role_list">
+
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="card-footer border-0 py-5">
+      <span class="text-muted text-sm"
+        >Showing 10 items out of 250 results found</span
+      >
+    </div> -->
+    <input type="hidden" value="" name="id" id="id">
+  </div>
+</template>
+
+<template id="semesters">
+    <form class="row g-3" id="addNewsemester"
+  data-action="api/admin/semester"
+  method="POST">
+    <div class="col-auto">
+      <label for="inputsemester2" class="visually-hidden">Add new semester</label>
+      <input
+        type="semester"
+        class="form-control"
+        id="inputsemester2"
+        placeholder="Add new semester"
+        name="name"
+      />
+    </div>
+    <div class="col-auto">
+        <button
+        type="button"
+        onclick="submitForm('addNewsemester', 'btn_addNewsemester')"
+        id="btn_addNewsemester"
+        class="btn btn-primary mb-3"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+  <hr />
+  <div class="card shadow border-0 mb-7">
+    <div class="card-header">
+      <h5 class="mb-0">semesters</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Updated date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="semester_list">
+
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="card-footer border-0 py-5">
+      <span class="text-muted text-sm"
+        >Showing 10 items out of 250 results found</span
+      >
+    </div> -->
+  </div>
+</template>
+
+<template id="account">
+  <h5 class="mb-0">Update your account Informations</h5>
+  <hr />
+  <form class="row g-3" class="row g-3"
+  id="updateLoginInfos"
+  data-action="api/all/update"
+  method="POST">
+    <div class="mb-3">
+      <label for="login" class="form-label"> <strong>Login</strong> </label>
+      <input name="name" type="text" class="form-control" id="login" />
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label"> <strong>Email</strong> </label>
+        <input type="email" class="form-control" id="email" name="email" />
+      </div>
+    <div class="mb-3">
+      <label for="oldpassword" class="form-label">
+        <strong>Old Password</strong>
+      </label>
+      <input name="old_password" type="password" class="form-control" id="oldpassword" />
+    </div>
+    <div class="mb-3">
+      <label for="newpassword" class="form-label">
+        <strong>New Password</strong>
+      </label>
+      <input name="new_password" type="password" class="form-control" id="newpassword" />
+    </div>
+    <div class="mb-3">
+      <label for="confirmpasswor" class="form-label">
+        <strong>Confirm Password</strong>
+      </label>
+      <input type="password" name="confirm_password" class="form-control" id="confirmpasswor" />
+    </div>
+    <button
+        type="button"
+        onclick="submitForm('updateLoginInfos', 'btn_updateLoginInfos')"
+        id="btn_updateLoginInfos"
+        class="btn btn-primary mb-3"
+      >
+        Save
+      </button>
+  </form>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../js/script.js"></script>
+<script src="../../js/function.js"></script>
+<script src="../../js/admin.js"></script>
+<script src="../../js/role.js"></script>
+<script src="../../js/semester.js"></script>
